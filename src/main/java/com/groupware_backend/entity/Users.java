@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class Users implements Serializable {
     private String fullName;
 
     @NotBlank
-    @Size(max = 120)
+    @Column(name = "password",length = 300)
     private String password;
 
     @Column(length = 55)
@@ -45,33 +46,21 @@ public class Users implements Serializable {
     private Set<UserRoleDept> userRoleDepts;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(  name = "user_role_dept",
+    @JoinTable(  name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<StatusTimeOff> statusTimeOffs;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<MtgUser> mtgUsers;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Report> reports;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<WorkContract> workContracts;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<UserTask> userTasks;
-
     public Users() {
     }
 
-    public Users(String username, String email, String password) {
-        this.userName = username;
-        this.email = email;
+    public Users(String userName, String fullName, @NotBlank String password, String email, String address, String position) {
+        this.userName = userName;
+        this.fullName = fullName;
         this.password = password;
+        this.email = email;
+        this.address = address;
+        this.position = position;
     }
 
 //    public Set<Role> getRoles() {

@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "user_role_dept", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "role_id", "dept_id"})
+@Table(name = "user_role", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "role_id"})
 })
 public class UserRoleDept implements Serializable {
 
@@ -16,7 +16,7 @@ public class UserRoleDept implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_role_dept_id")
+    @Column(name = "user_role_id")
     private Long userRoleDeptID;
 
     @ManyToOne
@@ -27,8 +27,5 @@ public class UserRoleDept implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "dept_id")
-    private Department department;
 
 }
