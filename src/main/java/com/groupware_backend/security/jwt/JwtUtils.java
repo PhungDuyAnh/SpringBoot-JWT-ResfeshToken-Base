@@ -32,8 +32,35 @@ public class JwtUtils {
                 .compact();
     }
 
+    public String generateTokenFromUsername(String userName){
+        return Jwts.builder()
+                .setSubject(userName)
+                .setIssuedAt(new Date())
+                .setExpiration(generateExpirationDate())
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+//        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        Claims claims = getClaimsFromJwtToken(token);
+        if (claims != null && isTokenExpired(claims)) {
+            return claims.getSubject();
+        }
+        return null;
+    }
+
+
+    public Date generateExpirationDate() {
+        return new Date((new Date()).getTime() + jwtExpirationMs);
+    }
+
+    public Claims getClaimsFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    }
+
+    private boolean isTokenExpired(Claims claims) {
+        return claims.getExpiration().after(new Date());
     }
 
     public boolean validateJwtToken(String authToken) {
